@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">ChatApplication</string>
+    <string name="login_title">Добрый день!</string>
+    <string name="login_subtitle">Введите логин и пароль, чтобы войти</string>
+    <string name="login_button">Войти</string>
+    <string name="no_account_title">Нет аккаунта?</string>
+    <string name="nav_register_button">Зарегистрируйтесь</string>
+    <string name="login_placeholder">Логин</string>
+    <string name="password_placeholder">Пароль</string>
+    <string name="repeat_password_placeholder">Повторите пароль</string>
+    <string name="no_such_user_message">Пользователя с такими данными не существует</string>
+
+    <string name="register_title">Регистрация</string>
+    <string name="register_subtitle">Заполните все поля для регистрации</string>
+    <string name="register_button">Создать</string>
+    <string name="has_account_title">Уже есть аккаунт?</string>
+    <string name="nav_login_button">Войдите</string>
+    <string name="user_exists_message">Пользователь с такими данными уже существует</string>
+    <string name="incorrect_fields_message">Некорректный логин или пароль</string>
+    <string name="incorrect_message_text_message">Некорректная длина сообщения</string>
+
+    <string name="message_text_hint">Введите сообщение</string>
+    <string name="default_error">Что-то пошло не так</string>
+    <string name="loading_messages_error">Ошибка загрузки сообщений</string>
+
+    <string name="on_start">Start</string>
+    <string name="on_stop">Stop</string>
+</resources>
