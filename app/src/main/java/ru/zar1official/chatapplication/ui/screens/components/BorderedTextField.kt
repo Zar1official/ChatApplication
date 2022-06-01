@@ -3,6 +3,7 @@ package ru.zar1official.chatapplication.ui.screens.components
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
@@ -19,7 +20,8 @@ fun BorderedTextField(
     icon: ImageVector,
     text: State<String>,
     onChangeText: (value: String) -> Unit,
-    @StringRes placeHolder: Int
+    @StringRes placeHolder: Int,
+    keyboardOptions: KeyboardOptions = KeyboardOptions()
 ) {
     OutlinedTextField(
         modifier = Modifier
@@ -40,6 +42,7 @@ fun BorderedTextField(
                 color = MaterialTheme.colors.secondary
             )
         },
-        singleLine = true
+        singleLine = true,
+        keyboardOptions = keyboardOptions,
     )
 }

@@ -31,6 +31,7 @@ class LoginViewModel @Inject constructor(
     fun onLogin() {
         val user = User(username = login.value.orEmpty(), password = password.value.orEmpty())
         viewModelScope.launch {
+            startLoading()
             loginUserUseCase(user)
                 .onSuccess {
                     navigateTo(Screens.GeneralChatScreen.route, true)
@@ -41,14 +42,17 @@ class LoginViewModel @Inject constructor(
                         else -> showMessage(R.string.default_error)
                     }
                 }
+            completeLoading()
         }
     }
 
     fun onRegister() {
         val user = User(username = login.value.orEmpty(), password = password.value.orEmpty())
         viewModelScope.launch {
+            startLoading()
             registerUserUseCase(user)
                 .onSuccess {
+                    completeLoading()
                     navigateTo(Screens.GeneralChatScreen.route, true)
                 }.onFailure {
                     when (it) {
@@ -59,6 +63,7 @@ class LoginViewModel @Inject constructor(
                         }
                     }
                 }
+            completeLoading()
         }
     }
 

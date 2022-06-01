@@ -2,6 +2,7 @@ package ru.zar1official.chatapplication.data.repositories
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import ru.zar1official.chatapplication.data.manager.CustomNotificationManager
 import ru.zar1official.chatapplication.data.manager.SessionManager
 import ru.zar1official.chatapplication.data.mappers.DialogMapper
 import ru.zar1official.chatapplication.data.mappers.DialogMessageMapper
@@ -20,6 +21,7 @@ class RepositoryImpl @Inject constructor(
     private val service: Service,
     private val webSocketService: WebSocketService,
     private val sessionManager: SessionManager,
+    private val notificationManager: CustomNotificationManager,
     private val userMapper: UserMapper,
     private val messageMapper: MessageMapper,
     private val dialogMapper: DialogMapper,
@@ -88,6 +90,10 @@ class RepositoryImpl @Inject constructor(
 
     override suspend fun sendDialogMessage(messageText: String) {
         webSocketService.sendDialogMessage(messageText)
+    }
+
+    override suspend fun notifyUser(title: String, text: String, id: Int) {
+        notificationManager.notifyUser(title, text, id)
     }
 
     override suspend fun sendMessage(messageText: String) {

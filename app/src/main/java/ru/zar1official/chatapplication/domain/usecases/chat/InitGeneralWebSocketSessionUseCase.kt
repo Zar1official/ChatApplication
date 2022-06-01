@@ -1,4 +1,4 @@
-package ru.zar1official.chatapplication.domain.usecases.general_chat
+package ru.zar1official.chatapplication.domain.usecases.chat
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

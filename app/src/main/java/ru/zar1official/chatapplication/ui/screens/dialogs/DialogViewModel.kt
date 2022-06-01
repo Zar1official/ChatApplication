@@ -7,11 +7,7 @@ import androidx.navigation.NavController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.zar1official.chatapplication.R
-import ru.zar1official.chatapplication.domain.usecases.dialogs.InitDialogWebSocketSessionUseCase
-import ru.zar1official.chatapplication.domain.usecases.dialogs.LoadDialogMessagesUseCase
-import ru.zar1official.chatapplication.domain.usecases.dialogs.ObserveDialogMessagesUseCase
-import ru.zar1official.chatapplication.domain.usecases.dialogs.SendDialogMessageUseCase
-import ru.zar1official.chatapplication.domain.usecases.general_chat.CloseGeneralWebSocketSessionUseCase
+import ru.zar1official.chatapplication.domain.usecases.dialogs.*
 import ru.zar1official.chatapplication.ui.models.DialogMessage
 import ru.zar1official.chatapplication.ui.screens.contract.BaseViewModel
 import javax.inject.Inject
@@ -20,9 +16,9 @@ import javax.inject.Inject
 class DialogViewModel @Inject constructor(
     private val loadDialogMessagesUseCase: LoadDialogMessagesUseCase,
     private val initDialogWebSocketSessionUseCase: InitDialogWebSocketSessionUseCase,
-    private val closeGeneralWebSocketSessionUseCase: CloseGeneralWebSocketSessionUseCase,
     private val observeDialogMessagesUseCase: ObserveDialogMessagesUseCase,
-    private val sendDialogMessageUseCase: SendDialogMessageUseCase
+    private val sendDialogMessageUseCase: SendDialogMessageUseCase,
+    private val notifyDialogMessageUseCase: NotifyDialogMessageUseCase
 ) :
     BaseViewModel() {
     private val _messages = MutableLiveData<List<DialogMessage>>()
@@ -44,6 +40,7 @@ class DialogViewModel @Inject constructor(
             loadDialogMessagesUseCase(dialogIdValue)
                 .onSuccess {
                     _messages.postValue(it)
+                    completeLoading()
                 }
                 .onFailure {
                     showMessage(R.string.default_error)
@@ -52,6 +49,7 @@ class DialogViewModel @Inject constructor(
     }
 
     fun connectToDialog(dialogIdValue: Int) {
+        startLoading()
         onLoadMessages(dialogIdValue)
         viewModelScope.launch {
             initDialogWebSocketSessionUseCase(dialogIdValue)
@@ -62,6 +60,7 @@ class DialogViewModel @Inject constructor(
                                 val tempList = messages.value?.toMutableList() ?: mutableListOf()
                                 tempList.add(0, dialogMessage)
                                 _messages.postValue(tempList)
+                                notifyDialogMessageUseCase(dialogMessage)
                             }
                         }
                             .onFailure {
@@ -79,6 +78,9 @@ class DialogViewModel @Inject constructor(
         val message = messageText.value.orEmpty()
         viewModelScope.launch {
             sendDialogMessageUseCase(message)
+                .onSuccess {
+                    _messageText.postValue("")
+                }
                 .onFailure {
                     when (it) {
                         is IllegalArgumentException -> showMessage(R.string.incorrect_message_text_message)
@@ -86,9 +88,5 @@ class DialogViewModel @Inject constructor(
                     }
                 }
         }
-    }
-
-    fun disconnectDialog() {
-        viewModelScope.launch { closeGeneralWebSocketSessionUseCase() }
     }
 }

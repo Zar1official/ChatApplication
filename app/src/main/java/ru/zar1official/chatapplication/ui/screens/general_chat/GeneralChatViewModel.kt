@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.zar1official.chatapplication.R
+import ru.zar1official.chatapplication.domain.usecases.chat.*
 import ru.zar1official.chatapplication.domain.usecases.dialogs.GetDialogUseCase
-import ru.zar1official.chatapplication.domain.usecases.general_chat.*
 import ru.zar1official.chatapplication.domain.usecases.session.ClearSessionUseCase
 import ru.zar1official.chatapplication.domain.usecases.users.LoadUsersUseCase
 import ru.zar1official.chatapplication.navigation.Screens
@@ -26,7 +26,8 @@ class GeneralChatViewModel @Inject constructor(
     private val closeGeneralWebSocketSessionUseCase: CloseGeneralWebSocketSessionUseCase,
     private val sendMessageUseCase: SendMessageUseCase,
     private val clearSessionUseCase: ClearSessionUseCase,
-    private val getDialogUseCase: GetDialogUseCase
+    private val getDialogUseCase: GetDialogUseCase,
+    private val notifyGeneralChatMessageUseCase: NotifyGeneralChatMessageUseCase
 ) :
     BaseViewModel() {
     private val _messageText = MutableLiveData<String>()
@@ -47,6 +48,9 @@ class GeneralChatViewModel @Inject constructor(
         val message = messageText.value.orEmpty()
         viewModelScope.launch {
             sendMessageUseCase(message)
+                .onSuccess {
+                    _messageText.postValue("")
+                }
                 .onFailure {
                     when (it) {
                         is IllegalArgumentException -> showMessage(R.string.incorrect_message_text_message)
@@ -61,6 +65,7 @@ class GeneralChatViewModel @Inject constructor(
             loadGeneralChatMessagesUseCase()
                 .onSuccess {
                     _messages.postValue(it)
+                    completeLoading()
                 }.onFailure {
                     showMessage(R.string.loading_messages_error)
                 }
@@ -84,10 +89,11 @@ class GeneralChatViewModel @Inject constructor(
     private suspend fun observeMessages() {
         observeMessagesUseCase()
             .onSuccess {
-                it.collect {
+                it.collect { message ->
                     val tempList = messages.value?.toMutableList() ?: mutableListOf()
-                    tempList.add(0, it)
+                    tempList.add(0, message)
                     _messages.postValue(tempList)
+                    notifyGeneralChatMessageUseCase(message)
                 }
             }
             .onFailure {
@@ -96,6 +102,7 @@ class GeneralChatViewModel @Inject constructor(
     }
 
     fun connectToGeneralChat() {
+        startLoading()
         onLoadMessages()
         onLoadUsers()
         viewModelScope.launch {
@@ -136,7 +143,6 @@ class GeneralChatViewModel @Inject constructor(
         viewModelScope.launch {
             getDialogUseCase(user.userId)
                 .onSuccess { dialog ->
-                    disconnectGeneralChat()
                     navigateTo(
                         Screens.DialogScreen.buildPath(dialog.dialogId, user.username)
                     )
@@ -145,5 +151,9 @@ class GeneralChatViewModel @Inject constructor(
                     showMessage(R.string.default_error)
                 }
         }
+    }
+
+    fun onNavigateDialogListScreen() {
+        showTextMessage("Not yet implemented")
     }
 }

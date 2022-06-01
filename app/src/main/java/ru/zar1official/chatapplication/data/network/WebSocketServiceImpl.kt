@@ -23,7 +23,7 @@ class WebSocketServiceImpl @Inject constructor(private val client: HttpClient) :
             url(WebSocketService.Paths.ConnectChat.path)
             parameter(WebSocketService.usernameParam, username)
         }
-        return socketSession?.isActive == true
+        return isSession()
     }
 
     override fun observeMessages(): Flow<MessageEntity> {
@@ -71,13 +71,17 @@ class WebSocketServiceImpl @Inject constructor(private val client: HttpClient) :
         socketSession?.close()
     }
 
+    override suspend fun isSession(): Boolean {
+        return socketSession?.isActive ?: false
+    }
+
     override suspend fun initDialogChatSession(username: String, dialogId: Int): Boolean {
         socketSession = client.webSocketSession {
             url(WebSocketService.Paths.ConnectChat.path)
             parameter(WebSocketService.usernameParam, username)
             parameter(WebSocketService.dialogIdParam, dialogId)
         }
-        return socketSession?.isActive == true
+        return isSession()
     }
 
     override suspend fun sendDialogMessage(messageText: String) {

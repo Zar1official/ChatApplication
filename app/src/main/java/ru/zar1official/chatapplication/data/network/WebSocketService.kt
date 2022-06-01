@@ -8,6 +8,7 @@ interface WebSocketService {
     suspend fun initGeneralChatSession(username: String): Boolean
     suspend fun sendMessage(messageText: String)
     suspend fun closeGeneralChatSession()
+    suspend fun isSession(): Boolean
 
     suspend fun initDialogChatSession(username: String, dialogId: Int): Boolean
     suspend fun sendDialogMessage(messageText: String)
@@ -16,7 +17,7 @@ interface WebSocketService {
     fun observeDialogMessages(): Flow<DialogMessageEntity>
 
     companion object {
-        private const val base_url = "ws://10.0.2.2:8080"
+        private const val base_url = "ws://dbf0-93-100-81-222.eu.ngrok.io"
         const val usernameParam = "username"
         const val dialogIdParam = "dialog_id"
         private fun buildUrl(path: String) = "${base_url}/$path"

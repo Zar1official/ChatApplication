@@ -17,7 +17,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -30,10 +29,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
-import ru.zar1official.chatapplication.ui.screens.components.BaseEventEffect
-import ru.zar1official.chatapplication.ui.screens.components.Message
-import ru.zar1official.chatapplication.ui.screens.components.MessageFieldSection
-import ru.zar1official.chatapplication.ui.screens.components.SearchView
+import ru.zar1official.chatapplication.ui.screens.components.*
 
 @Composable
 fun GeneralChatScreen(
@@ -48,6 +44,7 @@ fun GeneralChatScreen(
     val resources = LocalContext.current.resources
     val lifecycleOwner = LocalLifecycleOwner.current
     val scope = rememberCoroutineScope()
+    val isLoading = viewModel.isLoading.observeAsState(initial = true)
 
     BaseEventEffect(
         viewModel = viewModel,
@@ -55,12 +52,15 @@ fun GeneralChatScreen(
         scaffoldState = scaffoldState,
         resources = resources
     )
+
     DisposableEffect(key1 = lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_START) {
                 viewModel.connectToGeneralChat()
-            } else if (event == Lifecycle.Event.ON_STOP) {
+            } else if (event == Lifecycle.Event.ON_DESTROY) {
                 viewModel.disconnectGeneralChat()
+            } else if (event == Lifecycle.Event.ON_STOP) {
+                scope.launch { scaffoldState.drawerState.close() }
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
@@ -135,7 +135,7 @@ fun GeneralChatScreen(
                     }
 
                     IconButton(
-                        onClick = { }
+                        onClick = { viewModel.onNavigateDialogListScreen() }
                     ) {
                         Icon(
                             imageVector = Icons.Default.Email,
@@ -154,32 +154,17 @@ fun GeneralChatScreen(
                         )
                     }
                 }
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(0.9f)
-                        .clip(RoundedCornerShape(topStart = 45.dp, topEnd = 45.dp))
-                        .background(color = Color.White)
-                ) {
-                    Column {
-                        LazyColumn(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .fillMaxHeight(0.9f),
-                            reverseLayout = true
-                        ) {
-                            items(messages.value) {
-                                Message(
-                                    message = it
-                                )
-                            }
-                            item { Spacer(modifier = Modifier.height(32.dp)) }
+                RoundedBox {
+                    if (!isLoading.value) {
+                        Column {
+                            MessagesList(messages = messages)
+                            MessageFieldSection(
+                                messageText = messageText,
+                                onChangeMessage = { viewModel.onChangeMessage(it) },
+                                onSendMessage = { viewModel.onSendMessage() })
                         }
-
-                        MessageFieldSection(
-                            messageText = messageText,
-                            onChangeMessage = { viewModel.onChangeMessage(it) },
-                            onSendMessage = { viewModel.onSendMessage() })
+                    } else {
+                        LoadingSection()
                     }
                 }
             }

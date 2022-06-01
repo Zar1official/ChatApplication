@@ -27,4 +27,6 @@ interface Repository {
     suspend fun getDialogMessages(dialogId: Int): List<DialogMessage>
     suspend fun observeDialogMessages(): Flow<DialogMessage>
     suspend fun sendDialogMessage(messageText: String)
+
+    suspend fun notifyUser(title: String, text: String, id: Int)
 }

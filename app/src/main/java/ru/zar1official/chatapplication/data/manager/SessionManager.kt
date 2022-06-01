@@ -30,6 +30,8 @@ class SessionManager @Inject constructor(@ApplicationContext private val context
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
         managerDatastoreName
     )
+
+    @Volatile
     private var currentSession: UserEntity = UserEntity(username = "", password = "")
 
     suspend fun updateSession(user: UserEntity) {

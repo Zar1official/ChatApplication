@@ -1,6 +1,8 @@
 package ru.zar1official.chatapplication.ui.screens.contract
 
 import androidx.annotation.StringRes
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -11,6 +13,9 @@ abstract class BaseViewModel : ViewModel() {
 
     private val _sharedFlowMessage = MutableSharedFlow<BaseEvent>()
     val sharedFlowMessage = _sharedFlowMessage.asSharedFlow()
+
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
 
     sealed class BaseEvent {
         class NavigateTo(val route: String, val clearBackStack: Boolean) : BaseEvent()
@@ -34,5 +39,13 @@ abstract class BaseViewModel : ViewModel() {
         viewModelScope.launch {
             _sharedFlowMessage.emit(BaseEvent.ShowTextMessage(message))
         }
+    }
+
+    protected fun completeLoading() {
+        _isLoading.postValue(false)
+    }
+
+    protected fun startLoading() {
+        _isLoading.postValue(true)
     }
 }

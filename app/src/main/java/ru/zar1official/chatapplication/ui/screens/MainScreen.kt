@@ -21,7 +21,7 @@ fun MainScreen() {
 
     NavHost(navController = navController, startDestination = Screens.SplashScreen.route) {
         composable(Screens.SplashScreen.route) {
-            SplashScreen(navController, scaffoldState = scaffoldState)
+            SplashScreen(navController = navController, scaffoldState = scaffoldState)
         }
         composable(Screens.LoginScreen.route) {
             LoginScreen(
