@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -20,6 +21,7 @@ fun RoundedBox(content: @Composable BoxScope.() -> Unit) {
             .fillMaxHeight(0.9f)
             .clip(RoundedCornerShape(topStart = 45.dp, topEnd = 45.dp))
             .background(color = Color.White),
-        content = content
+        content = content,
+        contentAlignment = Alignment.Center
     )
 }

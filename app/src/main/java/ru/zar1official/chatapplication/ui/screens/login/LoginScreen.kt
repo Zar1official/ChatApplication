@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -87,7 +88,8 @@ fun LoginScreen(
                             icon = Icons.Filled.Lock,
                             text = password,
                             onChangeText = { viewModel.onChangePassword(it) },
-                            placeHolder = R.string.password_placeholder
+                            placeHolder = R.string.password_placeholder,
+                            visualTransformation = PasswordVisualTransformation()
                         )
 
                         Spacer(modifier = Modifier.height(25.dp))

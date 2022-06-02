@@ -17,7 +17,7 @@ interface WebSocketService {
     fun observeDialogMessages(): Flow<DialogMessageEntity>
 
     companion object {
-        private const val base_url = "ws://dbf0-93-100-81-222.eu.ngrok.io"
+        private const val base_url = "ws://3bac-93-100-81-222.eu.ngrok.io"
         const val usernameParam = "username"
         const val dialogIdParam = "dialog_id"
         private fun buildUrl(path: String) = "${base_url}/$path"

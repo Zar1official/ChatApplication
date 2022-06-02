@@ -16,7 +16,7 @@ interface Service {
     suspend fun getDialogs(userId: Int): List<DialogEntity>
 
     companion object {
-        private const val base_url = "https://dbf0-93-100-81-222.eu.ngrok.io"
+        private const val base_url = "https://3bac-93-100-81-222.eu.ngrok.io"
         private fun buildUrl(path: String) = "$base_url/$path"
 
         const val timestampParam = "timestamp"
