@@ -9,9 +9,9 @@ import kotlinx.coroutines.isActive
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import ru.zar1official.chatapplication.data.models.DialogMessageEntity
-import ru.zar1official.chatapplication.data.models.MessageEntity
-import ru.zar1official.chatapplication.data.models.WebSocketEntity
+import models.DialogMessageEntity
+import models.GeneralChatMessageEntity
+import models.SocketModel
 import javax.inject.Inject
 
 class WebSocketServiceImpl @Inject constructor(private val client: HttpClient) : WebSocketService {
@@ -26,13 +26,13 @@ class WebSocketServiceImpl @Inject constructor(private val client: HttpClient) :
         return isSession()
     }
 
-    override fun observeMessages(): Flow<MessageEntity> {
+    override fun observeMessages(): Flow<GeneralChatMessageEntity> {
         return socketSession?.incoming
             ?.receiveAsFlow()
             ?.filter { it is Frame.Text }
             ?.map {
                 val json = (it as? Frame.Text)?.readText() ?: ""
-                Json.decodeFromString<WebSocketEntity>(json)
+                Json.decodeFromString<SocketModel>(json)
             }
             ?.filter { it.type == WebSocketService.EntityType.Message.type }
             ?.map {
@@ -47,7 +47,7 @@ class WebSocketServiceImpl @Inject constructor(private val client: HttpClient) :
             ?.filter { it is Frame.Text }
             ?.map {
                 val json = (it as? Frame.Text)?.readText() ?: ""
-                Json.decodeFromString<WebSocketEntity>(json)
+                Json.decodeFromString<SocketModel>(json)
             }
             ?.filter { it.type == WebSocketService.EntityType.DialogMessage.type }
             ?.map {
@@ -59,7 +59,7 @@ class WebSocketServiceImpl @Inject constructor(private val client: HttpClient) :
 
     override suspend fun sendMessage(messageText: String) {
         val parsedEntity = Json.encodeToString(
-            WebSocketEntity(
+            SocketModel(
                 type = WebSocketService.EntityType.Message.type,
                 value = messageText
             )
@@ -86,7 +86,7 @@ class WebSocketServiceImpl @Inject constructor(private val client: HttpClient) :
 
     override suspend fun sendDialogMessage(messageText: String) {
         val parsedEntity = Json.encodeToString(
-            WebSocketEntity(
+            SocketModel(
                 type = WebSocketService.EntityType.DialogMessage.type,
                 value = messageText
             )

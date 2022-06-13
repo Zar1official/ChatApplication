@@ -78,7 +78,7 @@ fun LoginScreen(
                         BorderedTextField(
                             icon = Icons.Filled.Email,
                             text = login,
-                            onChangeText = { viewModel.onChangeLogin(it) },
+                            onChangeText = viewModel::onChangeLogin,
                             placeHolder = R.string.login_placeholder
                         )
 
@@ -87,7 +87,7 @@ fun LoginScreen(
                         BorderedTextField(
                             icon = Icons.Filled.Lock,
                             text = password,
-                            onChangeText = { viewModel.onChangePassword(it) },
+                            onChangeText = viewModel::onChangePassword,
                             placeHolder = R.string.password_placeholder,
                             visualTransformation = PasswordVisualTransformation()
                         )
@@ -128,9 +128,7 @@ fun LoginScreen(
                                     fontWeight = FontWeight.Light,
                                     color = MaterialTheme.colors.primary
                                 ),
-                                modifier = Modifier.clickable {
-                                    viewModel.onNavigateRegister()
-                                }
+                                modifier = Modifier.clickable(onClick = viewModel::onNavigateRegister)
                             )
                         }
                     }

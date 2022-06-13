@@ -73,9 +73,9 @@ fun DialogScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(
-                        onClick = {
-                            viewModel.onGoBack(navController = navController)
-                        }
+                        onClick =
+                        viewModel::popCurrentScreen
+
                     ) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
@@ -97,11 +97,12 @@ fun DialogScreen(
                 RoundedBox {
                     if (!isLoading.value) {
                         Column {
-                            MessagesList(messages = messages)
+                            MessagesList(messages = messages, {})
                             MessageFieldSection(
                                 messageText = messageText,
-                                onChangeMessage = { viewModel.onChangeMessage(it) },
-                                onSendMessage = { viewModel.onSendMessage() })
+                                onChangeMessage = viewModel::onChangeMessage,
+                                onSendMessage = viewModel::onSendMessage
+                            )
                         }
                     } else {
                         LoadingSection()

@@ -9,7 +9,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
-import ru.zar1official.chatapplication.data.models.UserEntity
+import models.UserEntity
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -44,7 +44,7 @@ class SessionManager @Inject constructor(@ApplicationContext private val context
     }
 
     suspend fun getSession(): UserEntity {
-        if (currentSession.isEmpty()) {
+        if (currentSession.userId == 0) {
             val prefs = context.dataStore.data.first()
 
             val userId = prefs[userIdKey] ?: 0

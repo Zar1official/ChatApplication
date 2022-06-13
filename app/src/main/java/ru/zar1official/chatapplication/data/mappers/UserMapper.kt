@@ -1,6 +1,6 @@
 package ru.zar1official.chatapplication.data.mappers
 
-import ru.zar1official.chatapplication.data.models.UserEntity
+import models.UserEntity
 import ru.zar1official.chatapplication.ui.models.User
 import javax.inject.Inject
 

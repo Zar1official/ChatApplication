@@ -44,6 +44,13 @@ class GeneralChatViewModel @Inject constructor(
     private val _userFilter = MutableLiveData<String>()
     val userFilter: LiveData<String> = _userFilter
 
+    private val lastTimestamp = MutableLiveData<Long>()
+
+    fun onUploadMessages() {
+        viewModelScope.launch {
+        }
+    }
+
     fun onSendMessage() {
         val message = messageText.value.orEmpty()
         viewModelScope.launch {

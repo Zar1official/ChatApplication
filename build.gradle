@@ -8,7 +8,6 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-serialization:1.5.21"
         classpath 'com.google.dagger:hilt-android-gradle-plugin:2.41'
     }
-
     repositories {
         google()
         mavenCentral()

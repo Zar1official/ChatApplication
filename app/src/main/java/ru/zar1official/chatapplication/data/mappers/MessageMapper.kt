@@ -1,13 +1,13 @@
 package ru.zar1official.chatapplication.data.mappers
 
-import ru.zar1official.chatapplication.data.models.MessageEntity
-import ru.zar1official.chatapplication.data.models.UserEntity
+import models.GeneralChatMessageEntity
+import models.UserEntity
 import ru.zar1official.chatapplication.ui.models.Message
 import javax.inject.Inject
 
 
 class MessageMapper @Inject constructor() {
-    fun mapFromEntity(entity: MessageEntity, session: UserEntity): Message {
+    fun mapFromEntity(entity: GeneralChatMessageEntity, session: UserEntity): Message {
         return Message(
             username = entity.senderUserName,
             text = entity.text,
@@ -17,8 +17,8 @@ class MessageMapper @Inject constructor() {
         )
     }
 
-    fun mapToEntity(model: Message): MessageEntity {
-        return MessageEntity(
+    fun mapToEntity(model: Message): GeneralChatMessageEntity {
+        return GeneralChatMessageEntity(
             senderUserName = model.username,
             text = model.text,
             timestamp = model.timestamp

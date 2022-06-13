@@ -78,7 +78,8 @@ fun GeneralChatScreen(
             Column {
                 SearchView(
                     user = userFilter,
-                    onValueChange = { viewModel.onSearchUser(it) })
+                    onValueChange = viewModel::onSearchUser
+                )
                 LazyColumn(content = {
                     items(items = users.value) { user ->
                         Spacer(modifier = Modifier.height(5.dp))
@@ -87,9 +88,10 @@ fun GeneralChatScreen(
                             elevation = 0.dp,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable(enabled = !user.isMe) {
-                                    viewModel.onNavigateDialogScreen(user)
-                                }
+                                .clickable(
+                                    enabled = !user.isMe, onClick =
+                                    { viewModel.onNavigateDialogScreen(user) }
+                                )
                         ) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Icon(imageVector = Icons.Default.Email, "")
@@ -135,7 +137,7 @@ fun GeneralChatScreen(
                     }
 
                     IconButton(
-                        onClick = { viewModel.onNavigateDialogListScreen() }
+                        onClick = viewModel::onNavigateDialogListScreen
                     ) {
                         Icon(
                             imageVector = Icons.Default.Email,
@@ -145,7 +147,7 @@ fun GeneralChatScreen(
                     }
 
                     IconButton(
-                        onClick = { viewModel.onLogout() }
+                        onClick = viewModel::onLogout
                     ) {
                         Icon(
                             imageVector = Icons.Default.Home,
@@ -157,11 +159,12 @@ fun GeneralChatScreen(
                 RoundedBox {
                     if (!isLoading.value) {
                         Column {
-                            MessagesList(messages = messages)
+                            MessagesList(messages = messages, {})
                             MessageFieldSection(
                                 messageText = messageText,
-                                onChangeMessage = { viewModel.onChangeMessage(it) },
-                                onSendMessage = { viewModel.onSendMessage() })
+                                onChangeMessage = viewModel::onChangeMessage,
+                                onSendMessage = viewModel::onSendMessage
+                            )
                         }
                     } else {
                         LoadingSection()

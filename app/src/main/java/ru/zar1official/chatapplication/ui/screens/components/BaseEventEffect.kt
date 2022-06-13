@@ -38,6 +38,9 @@ fun BaseEventEffect(
                         duration = SnackbarDuration.Short,
                     )
                 }
+                BaseViewModel.BaseEvent.PopCurrent -> {
+                    navController.popBackStack()
+                }
             }
         }
     })

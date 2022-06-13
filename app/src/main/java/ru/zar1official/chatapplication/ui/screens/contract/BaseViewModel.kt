@@ -19,6 +19,7 @@ abstract class BaseViewModel : ViewModel() {
 
     sealed class BaseEvent {
         class NavigateTo(val route: String, val clearBackStack: Boolean) : BaseEvent()
+        object PopCurrent : BaseEvent()
         class ShowMessage(@StringRes val message: Int) : BaseEvent()
         class ShowTextMessage(val message: String) : BaseEvent()
     }
@@ -32,6 +33,12 @@ abstract class BaseViewModel : ViewModel() {
     protected fun navigateTo(route: String, popBackStack: Boolean = false) {
         viewModelScope.launch {
             _sharedFlowMessage.emit(BaseEvent.NavigateTo(route, popBackStack))
+        }
+    }
+
+    fun popCurrentScreen() {
+        viewModelScope.launch {
+            _sharedFlowMessage.emit(BaseEvent.PopCurrent)
         }
     }
 

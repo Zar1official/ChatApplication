@@ -3,10 +3,10 @@ package ru.zar1official.chatapplication.data.network
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.http.*
-import ru.zar1official.chatapplication.data.models.DialogEntity
-import ru.zar1official.chatapplication.data.models.DialogMessageEntity
-import ru.zar1official.chatapplication.data.models.MessageEntity
-import ru.zar1official.chatapplication.data.models.UserEntity
+import models.DialogEntity
+import models.DialogMessageEntity
+import models.GeneralChatMessageEntity
+import models.UserEntity
 import javax.inject.Inject
 
 class ServiceImpl @Inject constructor(private val client: HttpClient) : Service {
@@ -25,11 +25,11 @@ class ServiceImpl @Inject constructor(private val client: HttpClient) : Service 
         }
     }
 
-    override suspend fun getAllMessages(): List<MessageEntity> {
+    override suspend fun getAllMessages(): List<GeneralChatMessageEntity> {
         return client.get(Service.Paths.Messages.path)
     }
 
-    override suspend fun getMessagesFromTimeStamp(timestamp: Long): List<MessageEntity> {
+    override suspend fun getMessagesFromTimeStamp(timestamp: Long): List<GeneralChatMessageEntity> {
         return client.get(Service.Paths.Messages.path) {
             parameter(Service.timestampParam, timestamp)
         }

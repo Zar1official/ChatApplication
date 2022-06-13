@@ -89,7 +89,7 @@ fun RegisterScreen(
                         BorderedTextField(
                             icon = Icons.Filled.Lock,
                             text = password,
-                            onChangeText = { viewModel.onChangePassword(it) },
+                            onChangeText = viewModel::onChangePassword,
                             placeHolder = R.string.password_placeholder,
                             visualTransformation = PasswordVisualTransformation()
                         )
@@ -99,7 +99,7 @@ fun RegisterScreen(
                         BorderedTextField(
                             icon = Icons.Filled.Lock,
                             text = repeatPassword,
-                            onChangeText = { viewModel.onChangeRepeatPassword(it) },
+                            onChangeText = viewModel::onChangeRepeatPassword,
                             placeHolder = R.string.repeat_password_placeholder,
                             visualTransformation = PasswordVisualTransformation()
                         )
