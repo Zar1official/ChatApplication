@@ -16,23 +16,7 @@ interface Service {
     suspend fun getDialogs(userId: Int): List<DialogEntity>
 
     companion object {
-        private const val base_url = "https://61ea-93-100-81-222.eu.ngrok.io"
-        private fun buildUrl(path: String) = "$base_url/$path"
-
-        const val timestampParam = "timestamp"
-        const val dialogIdParam = "dialog_id"
-        const val userIdParam = "user_id"
-        const val companionIdParam = "companion_id"
-        const val usernameParam = "username"
-    }
-
-    sealed class Paths(val path: String) {
-        object Login : Paths(buildUrl("login"))
-        object Register : Paths(buildUrl("register"))
-        object Messages : Paths(buildUrl("messages"))
-        object Users : Paths(buildUrl("users"))
-        object DialogMessages : Paths(buildUrl("dialog-messages"))
-        object GetDialog : Paths(buildUrl("g-dialog"))
-        object DialogList : Paths(buildUrl("dialog-list"))
+        private const val base_url = "2aff-93-100-81-222.eu.ngrok.io"
+        fun buildUrl(path: String) = "https://$base_url/$path"
     }
 }

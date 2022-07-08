@@ -1,5 +1,7 @@
 package ru.zar1official.chatapplication.data.network
 
+import constants.Params
+import constants.Routes
 import io.ktor.client.*
 import io.ktor.client.features.websocket.*
 import io.ktor.client.request.*
@@ -12,6 +14,7 @@ import kotlinx.serialization.json.Json
 import models.DialogMessageEntity
 import models.GeneralChatMessageEntity
 import models.SocketModel
+import models.SocketModelType
 import javax.inject.Inject
 
 class WebSocketServiceImpl @Inject constructor(private val client: HttpClient) : WebSocketService {
@@ -20,8 +23,8 @@ class WebSocketServiceImpl @Inject constructor(private val client: HttpClient) :
 
     override suspend fun initGeneralChatSession(username: String): Boolean {
         socketSession = client.webSocketSession {
-            url(WebSocketService.Paths.ConnectChat.path)
-            parameter(WebSocketService.usernameParam, username)
+            url(WebSocketService.buildUrl(Routes.GeneralChat.path))
+            parameter(Params.USERNAME_PARAM, username)
         }
         return isSession()
     }
@@ -34,7 +37,7 @@ class WebSocketServiceImpl @Inject constructor(private val client: HttpClient) :
                 val json = (it as? Frame.Text)?.readText() ?: ""
                 Json.decodeFromString<SocketModel>(json)
             }
-            ?.filter { it.type == WebSocketService.EntityType.Message.type }
+            ?.filter { it.type == SocketModelType.GeneralChatMessage.type }
             ?.map {
                 Json.decodeFromString(it.value)
             }
@@ -49,7 +52,7 @@ class WebSocketServiceImpl @Inject constructor(private val client: HttpClient) :
                 val json = (it as? Frame.Text)?.readText() ?: ""
                 Json.decodeFromString<SocketModel>(json)
             }
-            ?.filter { it.type == WebSocketService.EntityType.DialogMessage.type }
+            ?.filter { it.type == SocketModelType.DialogMessage.type }
             ?.map {
                 Json.decodeFromString(it.value)
             }
@@ -60,7 +63,7 @@ class WebSocketServiceImpl @Inject constructor(private val client: HttpClient) :
     override suspend fun sendMessage(messageText: String) {
         val parsedEntity = Json.encodeToString(
             SocketModel(
-                type = WebSocketService.EntityType.Message.type,
+                type = SocketModelType.GeneralChatMessage.type,
                 value = messageText
             )
         )
@@ -77,9 +80,9 @@ class WebSocketServiceImpl @Inject constructor(private val client: HttpClient) :
 
     override suspend fun initDialogChatSession(username: String, dialogId: Int): Boolean {
         socketSession = client.webSocketSession {
-            url(WebSocketService.Paths.ConnectChat.path)
-            parameter(WebSocketService.usernameParam, username)
-            parameter(WebSocketService.dialogIdParam, dialogId)
+            url(WebSocketService.buildUrl(Routes.GeneralChat.path))
+            parameter(Params.USERNAME_PARAM, username)
+            parameter(Params.DIALOG_ID_PARAM, dialogId)
         }
         return isSession()
     }
@@ -87,7 +90,7 @@ class WebSocketServiceImpl @Inject constructor(private val client: HttpClient) :
     override suspend fun sendDialogMessage(messageText: String) {
         val parsedEntity = Json.encodeToString(
             SocketModel(
-                type = WebSocketService.EntityType.DialogMessage.type,
+                type = SocketModelType.DialogMessage.type,
                 value = messageText
             )
         )
