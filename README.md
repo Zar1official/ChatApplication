@@ -17,3 +17,5 @@
 * [Clean Architecture](https://www.geeksforgeeks.org/what-is-clean-architecture-in-android/)
 * [Coroutines](https://github.com/Kotlin/kotlinx.coroutines)
 * [Ktor](https://github.com/ktorio/ktor)
+* [Hilt](https://github.com/googlecodelabs/android-hilt)
+* [Compose Navigation](https://developer.android.com/jetpack/compose/navigation)
