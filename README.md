@@ -1,6 +1,6 @@
 # ChatApplication (client)
 
-### Simple chat application for text messaging, mprovides dialogs and general chat for all users.
+### Simple chat application for text messaging, provides dialogs and general chat for all users.
 
 
 ## Screenshots
